@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  emqx:
+    image: emqx/emqx:latest
+    container_name: emqx
+    ports:
+      - 1883:1883
+      - 8883:8883
+      - 8083:8083
+      - 8084:8084
+      - 10.10.10.99:18083:18083
+    restart: always
+    environment:
+      - EMQX_NAME=hostname
+      - EMQX_HOST=hostname
+      - EMQX_LOADED_PLUGINS=emqx_auth_username,emqx_auth_clientid,emq_auth_mysql,emq_auth_mongo,emq_auth_mongo
+      - EMQX_SSL_CERT_FILE=/opt/emqx/cert.pem
+      - EMQX_SSL_KEY_FILE=/opt/emqx/key.pem
+      - TZ=Asia/Bangkok
+    volumes:
+      - ./data:/opt/emqx/data
+      - ./cert.pem:/opt/emqx/cert.pem
+      - ./key.pem:/opt/emqx/key.pem
+    networks:
+      - backend
+
+networks:
+  backend:
+    external:
+      name: backend
