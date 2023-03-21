@@ -1,1 +1,1 @@
-# Repository Title
+# Quick Deploy EMQX
