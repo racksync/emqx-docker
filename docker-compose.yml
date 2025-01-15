@@ -9,19 +9,19 @@ services:
       - 8883:8883
       - 8083:8083
       - 8084:8084
-      - 10.10.10.99:18083:18083
+      - 18083:18083
     restart: always
-    environment:
-      - EMQX_NAME=hostname
-      - EMQX_HOST=hostname
-      - EMQX_LOADED_PLUGINS=emqx_auth_username,emqx_auth_clientid,emq_auth_mysql,emq_auth_mongo,emq_auth_mongo
-      - EMQX_SSL_CERT_FILE=/opt/emqx/cert.pem
-      - EMQX_SSL_KEY_FILE=/opt/emqx/key.pem
-      - TZ=Asia/Bangkok
+    env_file:
+      - ./default.env
     volumes:
-      - ./data:/opt/emqx/data
-      - ./cert.pem:/opt/emqx/cert.pem
-      - ./key.pem:/opt/emqx/key.pem
+      - ${PWD}/data:/opt/emqx/data
+      - ${PWD}/cert.pem:/opt/emqx/cert.pem
+      - ${PWD}/key.pem:/opt/emqx/key.pem
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:18083"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     networks:
       - backend
 
